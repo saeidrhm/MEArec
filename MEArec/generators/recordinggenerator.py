@@ -401,6 +401,10 @@ class RecordingGenerator:
             params['recordings']['overlap'] = False
         overlap = params['recordings']['overlap']
 
+        if 'overlap_window_size_coef' not in rec_params.keys():
+            params['recordings']['overlap_window_size_coef'] = 1.0
+        overlap_window_size_coef = params['recordings']['overlap_window_size_coef']
+
         if 'extract_waveforms' not in rec_params.keys():
             params['recordings']['extract_waveforms'] = False
         extract_waveforms = params['recordings']['extract_waveforms']
@@ -782,7 +786,7 @@ class RecordingGenerator:
                 st.annotate(bintype=template_bin[i], mtype=template_celltypes[i], soma_position=template_locs[i])
 
             if overlap:
-                annotate_overlapping_spikes(spiketrains, overlapping_pairs=overlapping, verbose=verbose_2)
+                annotate_overlapping_spikes(spiketrains, overlapping_pairs=overlapping, verbose=verbose_2, t_jitt = overlap_window_size_coef * pq.ms)
 
             if verbose_1:
                 print('Convolution seed: ', conv_seed)
