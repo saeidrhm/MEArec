@@ -1570,8 +1570,6 @@ def annotate_overlapping_spikes(spiketrains, t_jitt=1 * pq.ms, overlapping_pairs
         If True output is verbose
 
     """
-    print("--- pq.ms: "+str(pq.ms))
-    print("--- t_jitt: "+str(t_jitt))
     if parallel:
         import multiprocessing
         threads = []
