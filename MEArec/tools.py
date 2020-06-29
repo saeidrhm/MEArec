@@ -783,7 +783,7 @@ def is_position_within_boundaries(position, x_lim, y_lim, z_lim):
     return valid_position
 
 
-def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_inh_templates=9, num_all_exc_templates=4, DuplicateSuppression=True, min_dist=25, x_lim=None, y_lim=None, z_lim=None,
+def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, LimSelTemp,CellTempSelByName=False, num_all_inh_templates=9, num_all_exc_templates=4, DuplicateSuppression=True, min_dist=25, x_lim=None, y_lim=None, z_lim=None,
                      min_amp=None, max_amp=None, drifting=False, drift_dir=None, preferred_dir=None, angle_tol=15,
                      n_overlap_pairs=None, overlap_threshold=0.8, verbose=False):
     """
@@ -878,11 +878,15 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
     iter = 0
     current_overlapping_pairs = 0
 
-    #DuplicateSuppression = True ## should be embed to params
+    CurrSelTemp = deepcopy(LimSelTemp)
+    CurrSelTemp = CurrSelTemp.fromkeys(CurrSelTemp, 0)
+    print("CellTempSelByName: "+str(CellTempSelByName))
     print("DuplicateSuppression: "+str(DuplicateSuppression))
     for i, (id_cell, bcat) in enumerate(zip(permuted_idxs, permuted_bin_cats)):
         placed = False
         iter += 1
+        if CellTempSelByName==True and (CurrSelTemp[celltypes[id_cell]]>=LimSelTemp[celltypes[id_cell]]):
+            continue # skip out of limit cell name
         if n_sel == n_exc + n_inh:
             break
         if excinh:
@@ -906,6 +910,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                     pos_sel.append(loc[id_cell])
                                     selected_idxs.append(id_cell)
                                     selected_celltemp.append(celltypes[id_cell])
+                                    CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                     n_sel += 1
                                     placed = True
                                 else:
@@ -914,6 +919,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                         pos_sel.append(loc[id_cell])
                                         selected_idxs.append(id_cell)
                                         selected_celltemp.append(celltypes[id_cell])
+                                        CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                         n_sel += 1
                                         placed = True
                                     else:
@@ -933,6 +939,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                                 pos_sel.append(loc[id_cell])
                                                 selected_idxs.append(id_cell)
                                                 selected_celltemp.append(celltypes[id_cell])
+                                                CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                                 n_sel += 1
                                                 placed = True
                                                 if verbose:
@@ -942,6 +949,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                                 pos_sel.append(loc[id_cell])
                                                 selected_idxs.append(id_cell)
                                                 selected_celltemp.append(celltypes[id_cell])
+                                                CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                                 n_sel += 1
                                                 placed = True
                                             else:
@@ -961,6 +969,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                         pos_sel.append(loc[id_cell])
                                         selected_idxs.append(id_cell)
                                         selected_celltemp.append(celltypes[id_cell])
+                                        CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                         n_sel += 1
                                         placed = True
                                     else:
@@ -969,6 +978,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                             pos_sel.append(loc[id_cell])
                                             selected_idxs.append(id_cell)
                                             selected_celltemp.append(celltypes[id_cell])
+                                            CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                             n_sel += 1
                                             placed = True
                                         else:
@@ -988,6 +998,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                                     pos_sel.append(loc[id_cell])
                                                     selected_idxs.append(id_cell)
                                                     selected_celltemp.append(celltypes[id_cell])
+                                                    CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                                     n_sel += 1
                                                     placed = True
                                                     if verbose:
@@ -998,6 +1009,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                                     pos_sel.append(loc[id_cell])
                                                     selected_idxs.append(id_cell)
                                                     selected_celltemp.append(celltypes[id_cell])
+                                                    CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                                     n_sel += 1
                                                     placed = True
                                                 else:
@@ -1032,6 +1044,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                     pos_sel.append(loc[id_cell])
                                     selected_idxs.append(id_cell)
                                     selected_celltemp.append(celltypes[id_cell])
+                                    CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                     n_sel += 1
                                     placed = True
                                 else:
@@ -1040,6 +1053,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                         pos_sel.append(loc[id_cell])
                                         selected_idxs.append(id_cell)
                                         selected_celltemp.append(celltypes[id_cell])
+                                        CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                         n_sel += 1
                                         placed = True
                                     else:
@@ -1059,6 +1073,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                                 pos_sel.append(loc[id_cell])
                                                 selected_idxs.append(id_cell)
                                                 selected_celltemp.append(celltypes[id_cell])
+                                                CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                                 n_sel += 1
                                                 placed = True
                                                 if verbose:
@@ -1068,6 +1083,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                                 pos_sel.append(loc[id_cell])
                                                 selected_idxs.append(id_cell)
                                                 selected_celltemp.append(celltypes[id_cell])
+                                                CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                                 n_sel += 1
                                                 placed = True
                                             else:
@@ -1086,6 +1102,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                     if n_overlap_pairs is None:
                                         selected_idxs.append(id_cell)
                                         selected_celltemp.append(celltypes[id_cell])
+                                        CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                         n_sel += 1
                                         placed = True
                                     else:
@@ -1094,6 +1111,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                             pos_sel.append(loc[id_cell])
                                             selected_idxs.append(id_cell)
                                             selected_celltemp.append(celltypes[id_cell])
+                                            CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                             n_sel += 1
                                             placed = True
                                         else:
@@ -1113,6 +1131,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                                     pos_sel.append(loc[id_cell])
                                                     selected_idxs.append(id_cell)
                                                     selected_celltemp.append(celltypes[id_cell])
+                                                    CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                                     n_sel += 1
                                                     placed = True
                                                     if verbose:
@@ -1123,6 +1142,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                                     pos_sel.append(loc[id_cell])
                                                     selected_idxs.append(id_cell)
                                                     selected_celltemp.append(celltypes[id_cell])
+                                                    CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                                     n_sel += 1
                                                     placed = True
                                                 else:
@@ -1155,6 +1175,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                             pos_sel.append(loc[id_cell])
                             selected_idxs.append(id_cell)
                             selected_celltemp.append(celltypes[id_cell])
+                            CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                             n_sel += 1
                             placed = True
                         else:
@@ -1163,6 +1184,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                 pos_sel.append(loc[id_cell])
                                 selected_idxs.append(id_cell)
                                 selected_celltemp.append(celltypes[id_cell])
+                                CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                 n_sel += 1
                                 placed = True
                             else:
@@ -1182,6 +1204,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                         pos_sel.append(loc[id_cell])
                                         selected_idxs.append(id_cell)
                                         selected_celltemp.append(celltypes[id_cell])
+                                        CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                         n_sel += 1
                                         placed = True
                                         if verbose:
@@ -1191,6 +1214,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                         pos_sel.append(loc[id_cell])
                                         selected_idxs.append(id_cell)
                                         selected_celltemp.append(celltypes[id_cell])
+                                        CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                         n_sel += 1
                                         placed = True
                                     else:
@@ -1209,6 +1233,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                 pos_sel.append(loc[id_cell])
                                 selected_idxs.append(id_cell)
                                 selected_celltemp.append(celltypes[id_cell])
+                                CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                 placed = True
                             else:
                                 possible_selected = deepcopy(selected_idxs)
@@ -1220,6 +1245,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, num_all_i
                                     pos_sel.append(loc[id_cell])
                                     selected_idxs.append(id_cell)
                                     selected_celltemp.append(celltypes[id_cell])
+                                    CurrSelTemp[celltypes[id_cell]] = CurrSelTemp[celltypes[id_cell]] + 1
                                     n_sel += 1
                                     placed = True
                                     current_overlapping_pairs = len(overlapping)

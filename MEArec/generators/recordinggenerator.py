@@ -409,6 +409,26 @@ class RecordingGenerator:
             params['recordings']['DuplicateSuppression'] = True
         DuplicateSuppression = params['recordings']['DuplicateSuppression']
 
+        if 'CellTempSelByName' not in rec_params.keys():
+            params['recordings']['CellTempSelByName'] = False
+        CellTempSelByName = params['recordings']['CellTempSelByName']
+
+        if 'LimSelTemp' not in rec_params.keys():
+            params['recordings']['LimSelTemp'] =  {"L5_BP_bAC217_1": 0,##inh
+                                                    "L5_BTC_bAC217_1": 0,##inh
+                                                    "L5_ChC_cACint209_1": 0,##inh
+                                                    "L5_DBC_bAC217_1": 0,##inh
+                                                    "L5_LBC_bAC217_1": 0,##inh
+                                                    "L5_MC_bAC217_1": 0,##inh
+                                                    "L5_NBC_bAC217_1": 0,##inh
+                                                    "L5_NGC_bNAC219_1": 0,##inh
+                                                    "L5_SBC_bNAC219_1": 0,##inh
+                                                    "L5_STPC_cADpyr232_1": 0,##exc
+                                                    "L5_TTPC1_cADpyr232_1": 0,##exc
+                                                    "L5_TTPC2_cADpyr232_1": 0,##exc
+                                                    "L5_UTPC_cADpyr232_1": 0##exc
+                                                    }
+        LimSelTemp = params['recordings']['LimSelTemp']
         if 'extract_waveforms' not in rec_params.keys():
             params['recordings']['extract_waveforms'] = False
         extract_waveforms = params['recordings']['extract_waveforms']
@@ -653,7 +673,7 @@ class RecordingGenerator:
 
                 if verbose_1:
                     print('Selecting cells')
-                idxs_cells, selected_cat = select_templates(locs, eaps, bin_cat, n_exc, n_inh, celltypes, num_all_inh_templates=9, num_all_exc_templates=4, DuplicateSuppression=DuplicateSuppression, x_lim=x_lim, y_lim=y_lim,
+                idxs_cells, selected_cat = select_templates(locs, eaps, bin_cat, n_exc, n_inh, celltypes,LimSelTemp,CellTempSelByName, num_all_inh_templates=9, num_all_exc_templates=4, DuplicateSuppression=DuplicateSuppression, x_lim=x_lim, y_lim=y_lim,
                                                             z_lim=z_lim, min_amp=min_amp, max_amp=max_amp,
                                                             min_dist=min_dist, drifting=drifting,
                                                             drift_dir=drift_directions,
@@ -939,7 +959,7 @@ class RecordingGenerator:
                 else:
                     tmp_templates_noise_pad = None
                     tmp_templates_noise_rs = None
-                idxs_cells, selected_cat = select_templates(locs, eaps, bin_cat=None, n_exc=far_neurons_n, n_inh=0, celltypes = celltypes, num_all_inh_templates=9, num_all_exc_templates=4,DuplicateSuppression=DuplicateSuppression,
+                idxs_cells, selected_cat = select_templates(locs, eaps, bin_cat=None, n_exc=far_neurons_n, n_inh=0, celltypes = celltypes, LimSelTemp=LimSelTemp, CellTempSelByName=CellTempSelByName, num_all_inh_templates=9, num_all_exc_templates=4,DuplicateSuppression=DuplicateSuppression,
                                                             x_lim=x_lim, y_lim=y_lim, z_lim=z_lim, min_amp=0,
                                                             max_amp=far_neurons_max_amp, min_dist=1,
                                                             verbose=False)

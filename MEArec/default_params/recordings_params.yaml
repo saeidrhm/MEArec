@@ -53,6 +53,22 @@ recordings:
   overlap: False # if True, temporal and spatial overlap are computed for each spike (it may be time consuming)
   overlap_window_size_coef: 1 # widnow size that used to identify two spikes as overlapped in the distance (ms)
   DuplicateSuppression: True # a mechanism that try to select most distinct cell templates if it can be possible!
+  CellTempSelByName: False # templates selected based on predefined number of each available template
+  LimSelTemp : {
+      "L5_BP_bAC217_1": 0,
+      "L5_BTC_bAC217_1": 0,
+      "L5_ChC_cACint209_1": 0,
+      "L5_DBC_bAC217_1": 0,
+      "L5_LBC_bAC217_1": 0,
+      "L5_MC_bAC217_1": 0,
+      "L5_NBC_bAC217_1": 0,
+      "L5_NGC_bNAC219_1": 0,
+      "L5_SBC_bNAC219_1": 0,
+      "L5_STPC_cADpyr232_1": 0,
+      "L5_TTPC1_cADpyr232_1": 0,
+      "L5_TTPC2_cADpyr232_1": 0,
+      "L5_UTPC_cADpyr232_1": 0
+    } # templates selected by numbers come in here, for example if L5_BP_bAC217_1 be 1 the number of selected templates from this type is 1
   extract_waveforms: False # if True, waveforms are extracted from recordings
   sync_rate: null # added synchrony rate for spatially overlapping templates
   sync_jitt: 1 # jitter in ms for added spikes
