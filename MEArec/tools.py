@@ -783,7 +783,7 @@ def is_position_within_boundaries(position, x_lim, y_lim, z_lim):
     return valid_position
 
 
-def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, LimSelTemp,CellTempSelByName=False, num_all_inh_templates=9, num_all_exc_templates=4, DuplicateSuppression=True, min_dist=25, x_lim=None, y_lim=None, z_lim=None,
+def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, LimSelTemp,CellTempSelByName=False, num_all_inh_templates=9, num_all_exc_templates=4, DuplicateSuppression=True, min_dist=1, max_dist=1000, x_lim=None, y_lim=None, z_lim=None,
                      min_amp=None, max_amp=None, drifting=False, drift_dir=None, preferred_dir=None, angle_tol=15,
                      n_overlap_pairs=None, overlap_threshold=0.8, verbose=False):
     """
@@ -861,6 +861,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, LimSelTem
 
     if verbose:
         print('Min dist: ', min_dist, 'Min amp: ', min_amp)
+        print('Max dist: ', max_dist, 'Max amp: ', max_amp)
 
     if min_amp is None:
         min_amp = 0
@@ -871,13 +872,12 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, LimSelTem
     if drifting:
         if drift_dir is None or preferred_dir is None:
             raise Exception('For drift selection provide drifting angles and preferred drift direction')
-
+    verbose = True
     n_sel = 0
     n_sel_exc = 0
     n_sel_inh = 0
     iter = 0
     current_overlapping_pairs = 0
-
     CurrSelTemp = deepcopy(LimSelTemp)
     CurrSelTemp = CurrSelTemp.fromkeys(CurrSelTemp, 0)
     print("CellTempSelByName: "+str(CellTempSelByName))
@@ -896,9 +896,10 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, LimSelTem
                         if DuplicateSuppression==True and celltypes[id_cell] in selected_celltemp:
                             continue # skip duplicate cell templates as much as possible 
                     dist = np.array([np.linalg.norm(loc[id_cell] - p) for p in pos_sel])
-                    if np.any(dist < min_dist):
+                    if np.any(dist < min_dist) or np.any(dist > max_dist):
                         if verbose:
                             print('Distance violation', np.min(dist), iter)
+                            print('Distance violation', np.max(dist), iter)
                         pass
                     else:
                         amp = np.max(np.abs(np.min(templates[id_cell])))
@@ -1030,9 +1031,10 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, LimSelTem
                         if DuplicateSuppression==True and celltypes[id_cell] in selected_celltemp:
                             continue # skip duplicate cell templates as much as possible 
                     dist = np.array([np.linalg.norm(loc[id_cell] - p) for p in pos_sel])
-                    if np.any(dist < min_dist):
+                    if np.any(dist < min_dist) or np.any(dist > max_dist):
                         if verbose:
                             print('Distance violation', np.min(dist), iter)
+                            print('Distance violation', np.max(dist), iter)
                         pass
                     else:
                         amp = np.max(np.abs(np.min(templates[id_cell])))
@@ -1162,9 +1164,10 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, LimSelTem
                 if DuplicateSuppression==True and celltypes[id_cell] in selected_celltemp:
                     continue # skip duplicate cell templates as much as possible 
             dist = np.array([np.linalg.norm(loc[id_cell] - p) for p in pos_sel])
-            if np.any(dist < min_dist):
+            if np.any(dist < min_dist) or np.any(dist > max_dist):
                 if verbose:
                     print('Distance violation', np.min(dist), iter)
+                    print('Distance violation', np.max(dist), iter)
                 pass
             else:
                 amp = np.max(np.abs(np.min(templates[id_cell])))
@@ -1271,7 +1274,7 @@ def select_templates(loc, templates, bin_cat, n_exc, n_inh, celltypes, LimSelTem
         print("count: "+ str(count) + " selected_cat :: "+str(selected_cat[count]))
     if i == len(permuted_idxs) - 1 and n_sel < n_exc + n_inh:
         raise RuntimeError("Templates could not be selected. \n"
-                           "Decrease number of spiketrains, decrease 'min_dist', or use more templates.")
+                           "Decrease number of spiketrains, decrease 'min_dist' or 'max_dist', or use more templates.")
     return selected_idxs, selected_cat
 
 

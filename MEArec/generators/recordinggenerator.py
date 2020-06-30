@@ -429,6 +429,9 @@ class RecordingGenerator:
                                                     "L5_UTPC_cADpyr232_1": 0##exc
                                                     }
         LimSelTemp = params['recordings']['LimSelTemp']
+        if 'max_dist' not in rec_params.keys():
+            params['recordings']['max_dist'] = None
+        max_dist = params['recordings']['max_dist']
         if 'extract_waveforms' not in rec_params.keys():
             params['recordings']['extract_waveforms'] = False
         extract_waveforms = params['recordings']['extract_waveforms']
@@ -675,7 +678,7 @@ class RecordingGenerator:
                     print('Selecting cells')
                 idxs_cells, selected_cat = select_templates(locs, eaps, bin_cat, n_exc, n_inh, celltypes,LimSelTemp,CellTempSelByName, num_all_inh_templates=9, num_all_exc_templates=4, DuplicateSuppression=DuplicateSuppression, x_lim=x_lim, y_lim=y_lim,
                                                             z_lim=z_lim, min_amp=min_amp, max_amp=max_amp,
-                                                            min_dist=min_dist, drifting=drifting,
+                                                            min_dist=min_dist, max_dist=max_dist, drifting=drifting,
                                                             drift_dir=drift_directions,
                                                             preferred_dir=preferred_dir, angle_tol=angle_tol,
                                                             n_overlap_pairs=n_overlap_pairs,
@@ -961,7 +964,7 @@ class RecordingGenerator:
                     tmp_templates_noise_rs = None
                 idxs_cells, selected_cat = select_templates(locs, eaps, bin_cat=None, n_exc=far_neurons_n, n_inh=0, celltypes = celltypes, LimSelTemp=LimSelTemp, CellTempSelByName=CellTempSelByName, num_all_inh_templates=9, num_all_exc_templates=4,DuplicateSuppression=DuplicateSuppression,
                                                             x_lim=x_lim, y_lim=y_lim, z_lim=z_lim, min_amp=0,
-                                                            max_amp=far_neurons_max_amp, min_dist=1,
+                                                            max_amp=far_neurons_max_amp, min_dist=1,, max_dist=max_dist,
                                                             verbose=False)
                 idxs_cells = sorted(idxs_cells)
                 templates_noise = eaps[idxs_cells]

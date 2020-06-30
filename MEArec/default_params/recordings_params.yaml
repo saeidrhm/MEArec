@@ -69,6 +69,7 @@ recordings:
       "L5_TTPC2_cADpyr232_1": 0,
       "L5_UTPC_cADpyr232_1": 0
     } # templates selected by numbers come in here, for example if L5_BP_bAC217_1 be 1 the number of selected templates from this type is 1
+  min_dist: None # max lim restrictions for distances of neurons
   extract_waveforms: False # if True, waveforms are extracted from recordings
   sync_rate: null # added synchrony rate for spatially overlapping templates
   sync_jitt: 1 # jitter in ms for added spikes
